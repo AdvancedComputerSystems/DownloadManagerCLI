@@ -3,6 +3,7 @@ package it.acsys.downloadmanager.cli;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -52,7 +53,7 @@ public class MainAutomatycCLI {
 	 * @param args
 	 */
 	public static void main(String[] args)  throws Exception {
-    	java.io.InputStream stream  = new java.io.FileInputStream("./configCLI.properties");
+    	InputStream stream  = new FileInputStream("./configCLI.properties");
     	Properties properties = new Properties();
     	properties.load(stream);
     	try {
@@ -150,248 +151,62 @@ public class MainAutomatycCLI {
 			    httpclient.getConnectionManager().shutdown();
 			}
 		} else if (args[0].equalsIgnoreCase("-download")) {
-			HttpResponse response;
-			try {
-			    HttpPost httpPost = new HttpPost(downloadURL);
-
-			    java.util.List <NameValuePair> params = new ArrayList <NameValuePair>();
-			    params.add(new BasicNameValuePair("commandType", "startDownload"));
-			    params.add(new BasicNameValuePair("URI", args[1]));
-
-			    httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-			    
-			    // Make the request
-			    response = httpclient.execute(httpPost);
-
-			    HttpEntity responseEntity = response.getEntity();
-
-			    System.out.println("----------------------------------------");
-			    System.out.println(response.getStatusLine());
-			    if(responseEntity != null) {
-			        System.out.println("Response content length: " + responseEntity.getContentLength());
-			    }
-
-			    String status = EntityUtils.toString(responseEntity);
-			    EntityUtils.consume(responseEntity);
-			    System.out.println("----------------------------------------");
-			    System.out.println("result:" + status);
-			    System.out.println();
-			} catch (ClientProtocolException e) {
-			    e.printStackTrace();
-			} catch (IOException e) {
-			    e.printStackTrace();
-			} finally {
-			    httpclient.getConnectionManager().shutdown();
-			}
+			
+			executeRequest( "startDownload", args[1]);
+			
 		} else if (args[0].equalsIgnoreCase("-info")) {
-			HttpResponse response;
-			try {
-			    HttpPost httpPost = new HttpPost(downloadURL);
-
-			    java.util.List <NameValuePair> params = new ArrayList <NameValuePair>();
-			    params.add(new BasicNameValuePair("commandType", "getStatus"));
-			    params.add(new BasicNameValuePair("gid", args[1]));
-
-			    httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-			    
-			    // Make the request
-			    response = httpclient.execute(httpPost);
-
-			    HttpEntity responseEntity = response.getEntity();
-
-			    System.out.println("----------------------------------------");
-			    System.out.println(response.getStatusLine());
-			    if(responseEntity != null) {
-			        System.out.println("Response content length: " + responseEntity.getContentLength());
-			    }
-
-			    String status = EntityUtils.toString(responseEntity);
-			    EntityUtils.consume(responseEntity);
-			    System.out.println("----------------------------------------");
-			    System.out.println("result:" + status);
-			    System.out.println();
-			} catch (ClientProtocolException e) {
-			    e.printStackTrace();
-			} catch (IOException e) {
-			    e.printStackTrace();
-			} finally {
-			    httpclient.getConnectionManager().shutdown();
-			}
+			executeRequest( "getStatus", args[1]);
 		} else if (args[0].equalsIgnoreCase("-pause")) {
-			HttpResponse response;
-			try {
-			    HttpPost httpPost = new HttpPost(downloadURL);
-
-			    java.util.List <NameValuePair> params = new ArrayList <NameValuePair>();
-			    params.add(new BasicNameValuePair("commandType", "pause"));
-			    params.add(new BasicNameValuePair("gid", args[1]));
-
-			    httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-			    
-			    // Make the request
-			    response = httpclient.execute(httpPost);
-
-			    HttpEntity responseEntity = response.getEntity();
-
-			    System.out.println("----------------------------------------");
-			    System.out.println(response.getStatusLine());
-			    if(responseEntity != null) {
-			        System.out.println("Response content length: " + responseEntity.getContentLength());
-			    }
-
-			    String id = EntityUtils.toString(responseEntity);
-			    EntityUtils.consume(responseEntity);
-			    System.out.println("----------------------------------------");
-			    System.out.println("result:" + id);
-			    System.out.println();
-			} catch (ClientProtocolException e) {
-			    e.printStackTrace();
-			} catch (IOException e) {
-			    e.printStackTrace();
-			} finally {
-			    httpclient.getConnectionManager().shutdown();
-			}
+			executeRequest( "pause", args[1]);
 		} else if (args[0].equalsIgnoreCase("-resume")) {
-			HttpResponse response;
-			try {
-			    HttpPost httpPost = new HttpPost(downloadURL);
-
-			    java.util.List <NameValuePair> params = new ArrayList <NameValuePair>();
-			    params.add(new BasicNameValuePair("commandType", "resume"));
-			    params.add(new BasicNameValuePair("gid", args[1]));
-
-			    httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-			    
-			    // Make the request
-			    response = httpclient.execute(httpPost);
-
-			    HttpEntity responseEntity = response.getEntity();
-
-			    System.out.println("----------------------------------------");
-			    System.out.println(response.getStatusLine());
-			    if(responseEntity != null) {
-			        System.out.println("Response content length: " + responseEntity.getContentLength());
-			    }
-
-			    String id = EntityUtils.toString(responseEntity);
-			    EntityUtils.consume(responseEntity);
-			    System.out.println("----------------------------------------");
-			    System.out.println("result:" + id);
-			    System.out.println();
-			} catch (ClientProtocolException e) {
-			    e.printStackTrace();
-			} catch (IOException e) {
-			    e.printStackTrace();
-			} finally {
-			    httpclient.getConnectionManager().shutdown();
-			}
+			executeRequest( "resume", args[1]);
 		} else if (args[0].equalsIgnoreCase("-remove")) {
-			HttpResponse response;
-			try {
-			    HttpPost httpPost = new HttpPost(downloadURL);
-
-			    java.util.List <NameValuePair> params = new ArrayList <NameValuePair>();
-			    params.add(new BasicNameValuePair("commandType", "remove"));
-			    params.add(new BasicNameValuePair("gid", args[1]));
-
-			    httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-			    
-			    // Make the request
-			    response = httpclient.execute(httpPost);
-
-			    HttpEntity responseEntity = response.getEntity();
-
-			    System.out.println("----------------------------------------");
-			    System.out.println(response.getStatusLine());
-			    if(responseEntity != null) {
-			        System.out.println("Response content length: " + responseEntity.getContentLength());
-			    }
-
-			    String id = EntityUtils.toString(responseEntity);
-			    EntityUtils.consume(responseEntity);
-			    System.out.println("----------------------------------------");
-			    System.out.println("result:" + id);
-			    System.out.println();
-			} catch (ClientProtocolException e) {
-			    e.printStackTrace();
-			} catch (IOException e) {
-			    e.printStackTrace();
-			} finally {
-			    httpclient.getConnectionManager().shutdown();
-			}
+			executeRequest( "remove", args[1]);
 		} else if (args[0].equalsIgnoreCase("-changePriority")) {
-			HttpResponse response;
-			try {
-			    HttpPost httpPost = new HttpPost(downloadURL);
-
-			    java.util.List <NameValuePair> params = new ArrayList <NameValuePair>();
-			    params.add(new BasicNameValuePair("commandType", "changePriority"));
-			    params.add(new BasicNameValuePair("gid", args[1]));
-
-			    httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-			    
-			    // Make the request
-			    response = httpclient.execute(httpPost);
-
-			    HttpEntity responseEntity = response.getEntity();
-
-			    System.out.println("----------------------------------------");
-			    System.out.println(response.getStatusLine());
-			    if(responseEntity != null) {
-			        System.out.println("Response content length: " + responseEntity.getContentLength());
-			    }
-
-			    String id = EntityUtils.toString(responseEntity);
-			    EntityUtils.consume(responseEntity);
-			    System.out.println("----------------------------------------");
-			    System.out.println("result:" + id);
-			    System.out.println();
-			} catch (ClientProtocolException e) {
-			    e.printStackTrace();
-			} catch (IOException e) {
-			    e.printStackTrace();
-			} finally {
-			    httpclient.getConnectionManager().shutdown();
-			}
+			executeRequest( "changePriority", args[1]);
 		} else if (args[0].equalsIgnoreCase("-addDAR") ||
 				args[0].equalsIgnoreCase("-cancelDAR") ||
 				args[0].equalsIgnoreCase("-pauseDAR") ||
 				args[0].equalsIgnoreCase("-resumeDAR")) {
-			HttpResponse response;
-			try {
-			    HttpPost httpPost = new HttpPost(downloadURL);
-
-			    java.util.List <NameValuePair> params = new ArrayList <NameValuePair>();
-			    params.add(new BasicNameValuePair("commandType", args[0]));
-			    params.add(new BasicNameValuePair("DARUri", args[1]));
-
-			    httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-			    
-			    // Make the request
-			    response = httpclient.execute(httpPost);
-
-			    HttpEntity responseEntity = response.getEntity();
-
-			    System.out.println("----------------------------------------");
-			    System.out.println(response.getStatusLine());
-			    if(responseEntity != null) {
-			        System.out.println("Response content length: " + responseEntity.getContentLength());
-			    }
-
-			    String id = EntityUtils.toString(responseEntity);
-			    EntityUtils.consume(responseEntity);
-			    System.out.println("----------------------------------------");
-			    System.out.println("result:" + id);
-			    System.out.println();
-			} catch (ClientProtocolException e) {
-			    e.printStackTrace();
-			} catch (IOException e) {
-			    e.printStackTrace();
-			} finally {
-			    httpclient.getConnectionManager().shutdown();
-			}
+			executeRequest( args[0], args[1]);
 		} else {
 			System.out.println(usage());
+		}
+	}
+	
+	private static void executeRequest(String command, String gid) {
+		HttpResponse response;
+		try {
+		    HttpPost httpPost = new HttpPost(downloadURL);
+
+		    java.util.List <NameValuePair> params = new ArrayList <NameValuePair>();
+		    params.add(new BasicNameValuePair("commandType", command));
+		    params.add(new BasicNameValuePair("gid", gid));
+
+		    httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+		    
+		    // Make the request
+		    response = httpclient.execute(httpPost);
+
+		    HttpEntity responseEntity = response.getEntity();
+
+		    System.out.println("----------------------------------------");
+		    System.out.println(response.getStatusLine());
+		    if(responseEntity != null) {
+		        System.out.println("Response content length: " + responseEntity.getContentLength());
+		    }
+
+		    String id = EntityUtils.toString(responseEntity);
+		    EntityUtils.consume(responseEntity);
+		    System.out.println("----------------------------------------");
+		    System.out.println("result:" + id);
+		    System.out.println();
+		} catch (ClientProtocolException e) {
+		    e.printStackTrace();
+		} catch (IOException e) {
+		    e.printStackTrace();
+		} finally {
+		    httpclient.getConnectionManager().shutdown();
 		}
 	}
 
